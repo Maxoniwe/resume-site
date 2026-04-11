@@ -1,0 +1,15 @@
+[Unit]
+Description=Gunicorn for Django resume site
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/srv/resume_site/app
+EnvironmentFile=/etc/resume_site.env
+ExecStart=/srv/resume_site/.venv/bin/gunicorn -c /srv/resume_site/app/gunicorn.conf.py config.wsgi:application
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

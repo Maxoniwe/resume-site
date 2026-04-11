@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.py[cod]
+.env
+.claude/
+CLAUDE.md
+docs/
+resume/templates/resume/base_old.html
+resume/templates/resume/home_old.html
+staticfiles/
+staticfiles_test/
+staticfiles_test2/
+db.sqlite3
+media/
+vercel_media/
+
+.vercel

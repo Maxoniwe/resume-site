@@ -1,0 +1,5 @@
+Django==4.2.29
+Pillow==11.3.0
+pypdf==6.9.2
+whitenoise==6.11.0
+

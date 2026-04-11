@@ -1,0 +1,322 @@
+{% extends "resume/base.html" %}
+{% block title %}{{ profile.full_name }} — {{ profile.job_title }}{% endblock %}
+
+{% block content %}
+
+<!-- ════════════════════════════════════════
+     HERO
+════════════════════════════════════════ -->
+<section id="hero" class="hero">
+  <div class="container hero-inner">
+    <div class="hero-content">
+
+      <!-- Availability -->
+      <div class="availability-badge reveal">
+        <span class="availability-dot" aria-hidden="true"></span>
+        <span>{{ profile.availability_note }}</span>
+      </div>
+
+      <!-- Badge pill -->
+      {% if profile.intro_badge %}
+      <div class="hero-badge reveal">{{ profile.intro_badge }}</div>
+      {% endif %}
+
+      <!-- Name -->
+      <h1 class="hero-name reveal">{{ profile.full_name }}</h1>
+
+      <!-- Role with typing effect -->
+      <p class="hero-role reveal" aria-label="{{ profile.job_title }}">
+        <span class="typing-target" data-typing-text="{{ profile.job_title }}"></span>
+        <span class="typing-cursor" aria-hidden="true">|</span>
+      </p>
+
+      <!-- Summary -->
+      {% if profile.hero_summary %}
+      <p class="hero-summary reveal">{{ profile.hero_summary }}</p>
+      {% endif %}
+
+      <!-- CTA buttons -->
+      <div class="hero-cta reveal">
+        <a href="#contact" class="btn btn-primary">
+          {{ profile.primary_button_text }}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="{% url 'resume:download_pdf' %}" class="btn btn-ghost">
+          {{ profile.download_button_text }}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v10m0 0 4-4m-4 4-4-4M4 17v2a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-2"/></svg>
+        </a>
+      </div>
+
+    </div><!-- /hero-content -->
+
+    <!-- Photo / Monogram -->
+    <div class="hero-photo-wrap reveal">
+      {% if profile.profile_photo %}
+      <img src="{{ profile.profile_photo.url }}"
+           alt="{{ profile.full_name }}"
+           width="260" height="260"
+           loading="eager"
+           decoding="async"
+           class="hero-photo">
+      {% else %}
+      <div class="hero-monogram" aria-hidden="true">{{ profile.initials }}</div>
+      {% endif %}
+    </div>
+
+  </div><!-- /hero-inner -->
+</section>
+
+
+<!-- ════════════════════════════════════════
+     ABOUT
+════════════════════════════════════════ -->
+<section id="about" class="about">
+  <div class="container about-inner">
+
+    <div class="about-text-col">
+      <div class="section-header reveal">
+        <span class="eyebrow">О себе</span>
+        <h2>{{ profile.about_title }}</h2>
+      </div>
+      <p class="about-text reveal">{{ profile.about_text }}</p>
+    </div>
+
+    <div class="about-facts-col">
+      <div class="fact-card reveal" data-reveal-index="0">
+        <span class="fact-value">Python</span>
+        <span class="fact-label">Основной язык</span>
+      </div>
+      <div class="fact-card reveal" data-reveal-index="1">
+        <span class="fact-value">10+</span>
+        <span class="fact-label">Проектов</span>
+      </div>
+      {% if profile.location %}
+      <div class="fact-card reveal" data-reveal-index="2">
+        <span class="fact-value fact-value-location">{{ profile.location }}</span>
+        <span class="fact-label">Локация</span>
+      </div>
+      {% endif %}
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════
+     SKILLS
+════════════════════════════════════════ -->
+{% if skills %}
+<section id="skills" class="skills">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="eyebrow">Стек</span>
+      <h2>{{ profile.skills_title }}</h2>
+    </div>
+    <div class="skills-grid">
+      {% for skill in skills %}
+      <article class="skill-card reveal" data-reveal-index="{{ forloop.counter0 }}">
+        <div class="skill-icon-badge" aria-hidden="true">{{ skill.icon_label }}</div>
+        <h3 class="skill-title">{{ skill.title }}</h3>
+        <p class="skill-desc">{{ skill.description }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+
+<!-- ════════════════════════════════════════
+     EXPERIENCE
+════════════════════════════════════════ -->
+{% if experiences %}
+<section id="experience" class="experience">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="eyebrow">Карьера</span>
+      <h2>{{ profile.experience_title }}</h2>
+    </div>
+    <div class="timeline">
+      {% for exp in experiences %}
+      <article class="timeline-item reveal" data-reveal-index="{{ forloop.counter0 }}">
+        <div class="exp-card">
+          <div class="exp-header">
+            <div class="exp-title-group">
+              <h3 class="exp-role">{{ exp.role }}</h3>
+              <p class="exp-company">{{ exp.company }}</p>
+            </div>
+            <div class="exp-meta">
+              <span class="exp-period">{{ exp.period }}</span>
+              {% if exp.location %}<span class="exp-location">{{ exp.location }}</span>{% endif %}
+            </div>
+          </div>
+          <p class="exp-summary">{{ exp.summary }}</p>
+          {% if exp.highlight_items %}
+          <ul class="exp-highlights">
+            {% for item in exp.highlight_items %}
+            <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+
+<!-- ════════════════════════════════════════
+     PROJECTS
+════════════════════════════════════════ -->
+{% if projects %}
+<section id="projects" class="projects">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="eyebrow">Работы</span>
+      <h2>{{ profile.projects_title }}</h2>
+    </div>
+    <div class="projects-grid">
+      {% for project in projects %}
+      <article class="project-card reveal" data-reveal-index="{{ forloop.counter0 }}">
+        <div class="project-card-inner">
+
+          {% if project.image %}
+          <!-- Cover image — full-width at top of card -->
+          <div class="project-cover">
+            <img src="{{ project.image.url }}"
+                 alt="{{ project.title }}"
+                 loading="lazy"
+                 decoding="async"
+                 class="project-cover-img">
+            <div class="project-cover-links">
+              {% if project.github_url %}
+              <a href="{{ project.github_url }}" target="_blank" rel="noopener noreferrer"
+                 class="project-link project-link--overlay" aria-label="GitHub — {{ project.title }}">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+              </a>
+              {% endif %}
+              {% if project.project_url %}
+              <a href="{{ project.project_url }}" target="_blank" rel="noopener noreferrer"
+                 class="project-link project-link--overlay" aria-label="Live — {{ project.title }}">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
+              {% endif %}
+            </div>
+          </div>
+
+          {% else %}
+          <!-- No image — monogram + links row -->
+          <div class="project-top">
+            <div class="project-monogram" aria-hidden="true">{{ project.monogram }}</div>
+            <div class="project-links">
+              {% if project.github_url %}
+              <a href="{{ project.github_url }}" target="_blank" rel="noopener noreferrer"
+                 class="project-link" aria-label="GitHub — {{ project.title }}">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+              </a>
+              {% endif %}
+              {% if project.project_url %}
+              <a href="{{ project.project_url }}" target="_blank" rel="noopener noreferrer"
+                 class="project-link" aria-label="Live — {{ project.title }}">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
+              {% endif %}
+            </div>
+          </div>
+          {% endif %}
+
+          <div class="project-body">
+            <h3 class="project-title">{{ project.title }}</h3>
+            <p class="project-summary">{{ project.summary }}</p>
+
+            <div class="project-footer">
+              {% if project.stack_items %}
+              <div class="chip-row">
+                {% for tag in project.stack_items %}
+                <span class="chip">{{ tag }}</span>
+                {% endfor %}
+              </div>
+              {% endif %}
+              {% if project.result %}
+              <span class="project-result-badge">{{ project.result }}</span>
+              {% endif %}
+            </div>
+          </div>
+
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+
+<!-- ════════════════════════════════════════
+     CONTACT
+════════════════════════════════════════ -->
+<section id="contact" class="contact">
+  <div class="container contact-inner">
+
+    <div class="section-header reveal">
+      <span class="eyebrow">Контакты</span>
+      <h2>{{ profile.contact_title }}</h2>
+      {% if profile.contact_note %}
+      <p class="contact-note">{{ profile.contact_note }}</p>
+      {% endif %}
+    </div>
+
+    <div class="contact-body reveal" data-reveal-index="0">
+
+      <div class="contact-items">
+        {% if profile.email %}
+        <a href="mailto:{{ profile.email }}" class="contact-item">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          <span>{{ profile.email }}</span>
+        </a>
+        {% endif %}
+        {% if profile.phone %}
+        <a href="tel:{{ profile.phone }}" class="contact-item">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.89a16 16 0 0 0 6 6l.94-.94a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <span>{{ profile.phone }}</span>
+        </a>
+        {% endif %}
+        {% if profile.location %}
+        <div class="contact-item contact-item--static">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>{{ profile.location }}</span>
+        </div>
+        {% endif %}
+      </div>
+
+      {% if social_links %}
+      <div class="contact-socials">
+        {% for link in social_links %}
+        <a href="{{ link.url }}" target="_blank" rel="noopener noreferrer"
+           class="social-btn" aria-label="{{ link.label }}">
+          {% if link.label == 'GitHub' %}
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+          {% elif link.label == 'Telegram' %}
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8-1.7 8.01c-.12.56-.46.7-.93.43l-2.58-1.9-1.24 1.19c-.14.14-.25.25-.52.25l.19-2.63 4.82-4.35c.21-.19-.05-.29-.32-.1L7.55 14.6l-2.54-.79c-.55-.17-.56-.55.12-.82l9.93-3.83c.46-.17.86.11.58.64z"/></svg>
+          {% else %}
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          {% endif %}
+          <span>{{ link.handle|default:link.label }}</span>
+        </a>
+        {% endfor %}
+        {% if profile.email %}
+        <a href="mailto:{{ profile.email }}" class="btn btn-primary contact-cta">
+        {{ profile.primary_button_text }}
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        {% endif %}
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}

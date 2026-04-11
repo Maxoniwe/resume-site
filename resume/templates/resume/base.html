@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="{{ profile.job_title }} — {{ profile.full_name }}. {{ profile.hero_summary|truncatewords:20 }}">
+  <meta property="og:title"       content="{{ profile.full_name }} — {{ profile.job_title }}">
+  <meta property="og:description" content="{{ profile.hero_summary|truncatewords:30 }}">
+  <meta property="og:type"        content="website">
+  <title>{% block title %}{{ profile.full_name }}{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'resume/css/main.css' %}">
+  <link rel="icon" type="image/svg+xml" href="{% static 'resume/img/favicon.svg' %}">
+</head>
+<body>
+
+  <a href="#main-content" class="skip-link">Перейти к содержимому</a>
+
+  <!-- ── Navbar ── -->
+  <header class="nav" role="banner">
+    <div class="container nav-inner">
+      <a href="#hero" class="nav-logo" aria-label="{{ profile.full_name }}">{{ profile.initials }}</a>
+
+      <nav class="nav-links" role="navigation" aria-label="Основная навигация">
+        <a href="#about"      class="nav-link">О себе</a>
+        <a href="#skills"     class="nav-link">Навыки</a>
+        <a href="#experience" class="nav-link">Опыт</a>
+        <a href="#projects"   class="nav-link">Проекты</a>
+      </nav>
+
+      <a href="#contact" class="btn btn-primary btn-sm nav-cta">{{ profile.primary_button_text }}</a>
+
+      <button class="nav-toggle"
+              aria-label="Открыть меню"
+              aria-expanded="false"
+              aria-controls="mobile-menu">
+        <span class="hamburger" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ── Mobile menu overlay ── -->
+  <div class="nav-menu" id="mobile-menu" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Навигация">
+    <nav class="nav-menu-nav">
+      <a href="#about"      class="nav-menu-link">О себе</a>
+      <a href="#skills"     class="nav-menu-link">Навыки</a>
+      <a href="#experience" class="nav-menu-link">Опыт</a>
+      <a href="#projects"   class="nav-menu-link">Проекты</a>
+      <a href="#contact"    class="nav-menu-link nav-menu-link--cta">{{ profile.primary_button_text }}</a>
+    </nav>
+  </div>
+
+  <main id="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- ── Footer ── -->
+  <footer class="footer" role="contentinfo">
+    <div class="container footer-inner">
+      <span class="footer-copy">© 2026 {{ profile.full_name }}</span>
+      {% if social_links %}
+      <div class="footer-socials">
+        {% for link in social_links %}
+        <a href="{{ link.url }}" target="_blank" rel="noopener noreferrer"
+           class="footer-social-link" aria-label="{{ link.label }}">
+          {% if link.label == 'GitHub' %}
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+          {% elif link.label == 'Telegram' %}
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8-1.7 8.01c-.12.56-.46.7-.93.43l-2.58-1.9-1.24 1.19c-.14.14-.25.25-.52.25l.19-2.63 4.82-4.35c.21-.19-.05-.29-.32-.1L7.55 14.6l-2.54-.79c-.55-.17-.56-.55.12-.82l9.93-3.83c.46-.17.86.11.58.64z"/></svg>
+          {% else %}
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          {% endif %}
+        </a>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </footer>
+
+  <script src="{% static 'resume/js/main.js' %}" defer></script>
+</body>
+</html>
